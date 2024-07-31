@@ -3,13 +3,18 @@ import ErrorHandler from "../middleware/error"
 
 export async function createTask(req:any, res: any, next: any){
     try {
-        const { title, description } = req.body;
+        let status = "Pending";
+        let priority = "Low";
+        const { title, description, statusInput, priorityInput } = req.body;
         if(!req.user){return res.status(400).json("login first")}
-
+        if(statusInput) status = statusInput;
+        if(priorityInput) priority = priorityInput;
+        
         await Task.create({
           title,
           description,
-          status:"Pending",
+          status,
+          priority,
           user: req.user,
         });
         res.status(201).json({
@@ -37,12 +42,13 @@ export const getMyTask = async (req:any, res:any, next:any) => {
 
 export const updateTask = async (req:any, res:any, next:any) => {
     try {
-        const {status, priority} = req.body;
+        const {status, priority, deadline} = req.body;
         const id = req.params.id;
         const task = await Task.findById(id);
         if (!task) return next(new ErrorHandler("Invalid ID", 404));
-        task.status = status;
-        task.Priority = priority;
+        if(status ) task.status = status;
+        if(priority) task.priority = priority;
+        if(deadline) task.deadline = deadline;
         await task.save();
         res.status(200).json({
           success: true,

@@ -1,32 +1,35 @@
 import mongoose from "mongoose";
 
 const PriorityType = ["Low", "Medium", "Urgent"] as const;
-const StatusType = ["Pending", "Reviewing", "Completed"] as const;
+const StatusType = ["TODO", "Pending", "Reviewing", "Completed"] as const;
 
 const schema = new mongoose.Schema({
-    title:{
+    title: {
         type: String,
-        require:true,
+        require: true,
     },
-    description:{
+    description: {
         type: String,
         require: true
     },
     status: {
-       type: StatusType,
-       require:true, 
-    },
-    Priority: {
-        type: PriorityType,
-    },
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"User",
+        type: StatusType,
         require: true,
     },
-    createdAt:{
-        type:Date,
-        default:Date.now,
+    priority: {
+        type: PriorityType,
+    },
+    deadline: {
+        type: Date,
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        require: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
 })
 
